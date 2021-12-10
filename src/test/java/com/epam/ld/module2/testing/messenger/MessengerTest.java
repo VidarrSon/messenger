@@ -7,6 +7,7 @@ import com.epam.ld.module2.testing.template.Template;
 import com.epam.ld.module2.testing.template.TemplateEngine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIf;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -35,12 +36,14 @@ public class MessengerTest {
         Client client = new Client();
         Template template = new Template();
 
+        when(templateEngine.generateMessage(null, client)).thenThrow(NullPointerException.class);
         assertThrows(NullPointerException.class, () -> messenger.sendMessage(null, template));
         assertThrows(NullPointerException.class, () -> messenger.sendMessage(client, null));
         assertThrows(NullPointerException.class, () -> messenger.sendMessage(null, null));
     }
 
     @Test
+    @DisabledIf("isDisabled")
     public void shouldCallSendMethodOneTime() {
         Messenger messenger = new Messenger(mailServer, templateEngine);
         Client client = new Client();
@@ -51,5 +54,9 @@ public class MessengerTest {
         doNothing().when(mailServer).send(anyString(), anyString());
         messenger.sendMessage(client, template);
         verify(mailServer, times(1)).send(anyString(), anyString());
+    }
+
+    public boolean isDisabled() {
+        return true;
     }
 }

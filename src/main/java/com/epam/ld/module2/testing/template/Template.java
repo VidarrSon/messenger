@@ -15,5 +15,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Template {
-    private String templateText;
+    private String templateText = "Subject: #{subject} \n From: #{addresses} \n" +
+            " #{greeting} \n\n #{body} \n\n #{signature}";
 }
