@@ -3,6 +3,7 @@ package com.epam.ld.module2.testing;
 
 import com.epam.ld.module2.testing.template.Template;
 import com.epam.ld.module2.testing.template.TemplateEngine;
+import com.epam.ld.module2.testing.utils.ConsoleHelper;
 
 import java.util.List;
 
@@ -38,11 +39,36 @@ public class Messenger {
     }
 
     public void runConsoleMode() {
-
+        Template template = createTemplate();
+        Client client = createClient();
+        sendMessage(client, template);
     }
 
     public void runFileMode(List<String> args) {
 
     }
 
+    private Template createTemplate() {
+        Template template = new Template();
+        ConsoleHelper.writeMessage("Type anything if you want to use default email template " +
+                "OR type 'no' to enter your own:");
+        String templateAnswer = ConsoleHelper.readString();
+        if (templateAnswer.equals("no")) {
+            ConsoleHelper.writeMessage("Please input a new template using #{...} for variables:");
+            template.setTemplateText(ConsoleHelper.readString());
+        }
+        return template;
+    }
+
+    private Client createClient() {
+        Client client = new Client();
+
+        ConsoleHelper.writeMessage("Please input information about your email.");
+        ConsoleHelper.writeMessage("Addresses:");
+        client.setAddresses(ConsoleHelper.readString());
+        ConsoleHelper.writeMessage("Draft message:");
+        client.setDraftMessage(ConsoleHelper.readString());
+
+        return client;
+    }
 }

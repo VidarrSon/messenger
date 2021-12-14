@@ -15,9 +15,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Client {
-    private String subject;
     private String addresses;
-    private String greeting;
-    private String body;
-    private String signature;
+    private String draftMessage;
 }
