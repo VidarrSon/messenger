@@ -3,27 +3,30 @@ package com.epam.ld.module2.testing;
 
 import com.epam.ld.module2.testing.template.Template;
 import com.epam.ld.module2.testing.template.TemplateEngine;
-import com.epam.ld.module2.testing.utils.ConsoleHelper;
-
-import java.util.List;
+import com.epam.ld.module2.testing.utils.InputHelper;
+import com.epam.ld.module2.testing.utils.InputHelperImpl;
 
 /**
  * The type Messenger.
  */
 public class Messenger {
-    private MailServer mailServer;
-    private TemplateEngine templateEngine;
+    private final MailServer mailServer;
+    private final TemplateEngine templateEngine;
+    private final InputHelperImpl inputHelper;
 
     /**
      * Instantiates a new Messenger.
      *
      * @param mailServer     the mail server
      * @param templateEngine the template engine
+     * @param inputHelper    the input helper
      */
     public Messenger(MailServer mailServer,
-                     TemplateEngine templateEngine) {
+                     TemplateEngine templateEngine,
+                     InputHelperImpl inputHelper) {
         this.mailServer = mailServer;
         this.templateEngine = templateEngine;
+        this.inputHelper = inputHelper;
     }
 
     /**
@@ -38,37 +41,27 @@ public class Messenger {
         mailServer.send(client.getAddresses(), messageContent);
     }
 
-    public void runConsoleMode() {
-        Template template = createTemplate();
-        Client client = createClient();
+
+    /**
+     * Launch the messenger.
+     */
+    public void launch() {
+        this.inputHelper.read();
+        Template template = getTemplate(this.inputHelper);
+        Client client = getClient(this.inputHelper);
         sendMessage(client, template);
     }
 
-    public void runFileMode(List<String> args) {
-
-    }
-
-    private Template createTemplate() {
+    private Template getTemplate(InputHelper inputHelper) {
         Template template = new Template();
-        ConsoleHelper.writeMessage("Type anything if you want to use default email template " +
-                "OR type 'no' to enter your own:");
-        String templateAnswer = ConsoleHelper.readString();
-        if (templateAnswer.equals("no")) {
-            ConsoleHelper.writeMessage("Please input a new template using #{...} for variables:");
-            template.setTemplateText(ConsoleHelper.readString());
+        String customTemplate = inputHelper.getTemplate();
+        if (!customTemplate.isEmpty()) {
+            template.setTemplateText(customTemplate);
         }
         return template;
     }
 
-    private Client createClient() {
-        Client client = new Client();
-
-        ConsoleHelper.writeMessage("Please input information about your email.");
-        ConsoleHelper.writeMessage("Addresses:");
-        client.setAddresses(ConsoleHelper.readString());
-        ConsoleHelper.writeMessage("Draft message:");
-        client.setDraftMessage(ConsoleHelper.readString());
-
-        return client;
+    private Client getClient(InputHelper inputHelper) {
+        return new Client(inputHelper.getAddresses(), inputHelper.getDraftMessage());
     }
 }

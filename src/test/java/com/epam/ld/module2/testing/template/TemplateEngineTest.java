@@ -41,26 +41,20 @@ public class TemplateEngineTest {
     void shouldGenerateExpectedMessageUsingParameterizedTest(String draftMessage, String expectedMessage) {
         TemplateEngine templateEngine = new TemplateEngine();
         Template template = new Template("#{subject}#{greeting}#{body}#{signature}");
-        Client client = generateClientBasedOnData("addresses@gmail.com", draftMessage);
+        Client client = new Client("address_to_send@gmail.com", draftMessage);
         String actualMessage = templateEngine.generateMessage(template, client);
 
         assertEquals(actualMessage, expectedMessage);
     }
 
     private Client generateClient() {
-        return Client.builder()
-                .addresses("corporate_email@epam.com")
-                .draftMessage("#{subject}IMPORTANT INFORMATION!#{greeting}Good morning my best friend!" +
-                        "#{body}Congratulations! You just received a payment! " +
-                        "Please send me your personal data to withdraw it." +
-                        "#{signature}Best regards, your buddy! (not a crook)")
-                .build();
+            return Client.builder()
+                    .addresses("corporate_email@epam.com")
+                    .draftMessage("#{subject}IMPORTANT INFORMATION!#{greeting}Good morning my best friend!" +
+                            "#{body}Congratulations! You just received a payment! " +
+                            "Please send me your personal data to withdraw it." +
+                            "#{signature}Best regards, your buddy! (not a crook)")
+                    .build();
     }
 
-    private Client generateClientBasedOnData(String addresses, String draftMessage) {
-        return Client.builder()
-                .addresses(addresses)
-                .draftMessage(draftMessage)
-                .build();
-    }
 }

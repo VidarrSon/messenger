@@ -1,0 +1,8 @@
+
+
+#{addresses}
+my_address@gmail.com, his_address@gmail.com
+#{/addresses}
+
+#{draft}
+#{subject}IMPORTANT INFORMATION!#{greeting}Good morning my best friend!#{body}Congratulations! You just received a payment! Please send me your personal data.#{signature}Best regards, your new friend! (not a crook)#{/draft}
